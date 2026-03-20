@@ -5,6 +5,7 @@ import os
 import re
 import tempfile
 from datetime import datetime
+from functools import lru_cache
 
 import emoji
 import ijson
@@ -225,21 +226,40 @@ def _extract_date(record):
         if raw is None or str(raw).strip() == "":
             continue
 
-        raw = str(raw)
-        try:
-            dt = datetime.strptime(raw, "%a %b %d %H:%M:%S %z %Y")
-            return dt.strftime("%Y-%m-%d %H:%M:%S")
-        except ValueError:
-            pass
-
-        try:
-            dt = pd.to_datetime(raw, errors="coerce")
-            if pd.notna(dt):
-                return dt.strftime("%Y-%m-%d %H:%M:%S")
-        except Exception:
-            pass
+        normalized = _normalize_date_fast(str(raw))
+        if normalized:
+            return normalized
 
     return ""
+
+
+@lru_cache(maxsize=20000)
+def _normalize_date_fast(raw):
+    """Normalize common date formats with low overhead for large datasets."""
+    value = raw.strip()
+    if not value:
+        return ""
+
+    # Fast path for already normalized/ISO-like strings.
+    if len(value) >= 19 and value[4:5] == "-" and value[7:8] == "-":
+        candidate = value[:19].replace("T", " ")
+        if candidate[10:11] == " " and candidate[13:14] == ":" and candidate[16:17] == ":":
+            return candidate
+
+    # Native Twitter format: Sat Oct 01 18:01:20 +0000 2016
+    try:
+        dt = datetime.strptime(value, "%a %b %d %H:%M:%S %z %Y")
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        pass
+
+    # ISO fallback (e.g. 2024-01-02T10:00:00Z)
+    try:
+        iso_value = value.replace("Z", "+00:00") if value.endswith("Z") else value
+        dt = datetime.fromisoformat(iso_value)
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        return ""
 
 
 def _extract_hashtags(record):
