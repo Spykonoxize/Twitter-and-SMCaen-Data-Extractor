@@ -60,9 +60,6 @@ def scrape_smcaen_matches(annee_debut, annee_fin, delay_seconds=0.8, timeout=20)
     if df.empty:
         return df
 
-    # Light cleanup to keep uniform labeling
-    df["Domicile"] = df["Domicile"].replace("SM Caen", "Caen")
-    df["Extérieur"] = df["Extérieur"].replace("SM Caen", "Caen")
     return df
 
 

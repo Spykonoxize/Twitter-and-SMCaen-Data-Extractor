@@ -7,6 +7,66 @@ window.addEventListener('DOMContentLoaded', function() {
     document.getElementById('annee_debut').max = currentYear;
 });
 
+// Initialize drag and drop zone for Twitter
+const dropZone = document.getElementById('twitter-drop-zone');
+const fileInput = document.getElementById('twitter-file');
+
+// Prevent default drag behaviors
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+// Highlight drop zone when item is dragged over it
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight() {
+    dropZone.classList.add('highlight');
+}
+
+function unhighlight() {
+    dropZone.classList.remove('highlight');
+}
+
+// Handle dropped files
+dropZone.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    fileInput.files = files;
+    updateDropZoneText();
+}
+
+// Handle file input change
+fileInput.addEventListener('change', updateDropZoneText);
+
+function updateDropZoneText() {
+    const content = dropZone.querySelector('.drag-drop-content');
+    if (fileInput.files.length > 0) {
+        const fileName = fileInput.files[0].name;
+        const fileSize = (fileInput.files[0].size / 1024 / 1024).toFixed(2);
+        content.innerHTML = `<p>✓ ${fileName}</p><p class="small">${fileSize} MB</p>`;
+    } else {
+        content.innerHTML = `<p>📁 Glissez-déposez votre fichier ici</p><p class="small">ou cliquez pour sélectionner</p>`;
+    }
+}
+
+// Allow clicking on drop zone to open file dialog
+dropZone.addEventListener('click', () => {
+    fileInput.click();
+});
+
 // Handle "Select all/Deselect all" button for Twitter
 document.getElementById('twitter-toggle-all').addEventListener('click', function(e) {
     e.preventDefault();

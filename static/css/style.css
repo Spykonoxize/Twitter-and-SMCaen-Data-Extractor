@@ -293,6 +293,45 @@ button[type="submit"]:active {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+.drag-drop-zone {
+    position: relative;
+    border: 2px dashed #c41e3a;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    background: #fafafa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.drag-drop-zone:hover {
+    background: #f3f3f3;
+    border-color: #003d5c;
+}
+
+.drag-drop-zone.highlight {
+    background: #e8f4f8;
+    border-color: #003d5c;
+    box-shadow: 0 0 10px rgba(0, 61, 92, 0.2);
+}
+
+.drag-drop-content {
+    pointer-events: none;
+}
+
+.drag-drop-content p {
+    margin: 8px 0;
+    color: #555;
+}
+
+.drag-drop-content p.small {
+    font-size: 0.9em;
+    color: #999;
+}
+
+.drag-drop-zone input[type="file"] {
+    display: none;
+}
 }
 
 @media (max-width: 768px) {

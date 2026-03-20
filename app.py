@@ -5,13 +5,30 @@ from werkzeug.utils import secure_filename
 from config import Config
 from src.twitter.extractor import extract_twitter_features
 from src.caen.extractor import extract_caen_data
+import gc
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
+# Configure maximum file size (150MB for safety on 512MB Render)
+app.config['MAX_CONTENT_LENGTH'] = 150 * 1024 * 1024
+
 def allowed_file(filename):
     """Check if file has an allowed extension"""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+def cleanup_temp_files():
+    """Clean up temporary files to free RAM"""
+    temp_dir = app.config['UPLOAD_FOLDER']
+    if os.path.exists(temp_dir):
+        try:
+            for file in os.listdir(temp_dir):
+                file_path = os.path.join(temp_dir, file)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+        except Exception:
+            pass
+    gc.collect()
 
 @app.route('/')
 def index():
@@ -22,6 +39,8 @@ def index():
 def extract_twitter():
     """Traite l'extraction de features Twitter"""
     filepath = None
+    output_path = None
+    
     try:
         # Vérifier si un fichier est uploadé
         if 'file' not in request.files:
@@ -64,13 +83,28 @@ def extract_twitter():
         return jsonify({'error': f'Erreur lors du traitement: {str(e)}'}), 500
     
     finally:
-        # Nettoyer le fichier temporaire uploadé
+        # Nettoyer les fichiers temporaires
         if filepath and os.path.exists(filepath):
-            os.remove(filepath)
+            try:
+                os.remove(filepath)
+            except Exception:
+                pass
+        
+        if output_path and os.path.exists(output_path):
+            try:
+                os.remove(output_path)
+            except Exception:
+                pass
+        
+        # Force garbage collection
+        gc.collect()
+        cleanup_temp_files()
 
 @app.route('/extract-caen', methods=['POST'])
 def extract_caen():
     """Traite l'extraction de données SM Caen"""
+    output_path = None
+    
     try:
         # Récupérer les paramètres
         annee_debut = int(request.form.get('annee_debut'))
@@ -94,6 +128,16 @@ def extract_caen():
         return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': f'Erreur lors du traitement: {str(e)}'}), 500
+    
+    finally:
+        if output_path and os.path.exists(output_path):
+            try:
+                os.remove(output_path)
+            except Exception:
+                pass
+        
+        gc.collect()
+        cleanup_temp_files()
 
 if __name__ == '__main__':
     app.run(debug=False)

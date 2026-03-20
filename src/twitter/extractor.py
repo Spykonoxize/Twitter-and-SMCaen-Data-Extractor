@@ -4,6 +4,8 @@ import json
 import tempfile
 import pandas as pd
 import emoji
+import gc
+from io import BytesIO
 
 def extract_twitter_features(input_file, selected_features, output_format='xlsx'):
     """
@@ -32,25 +34,35 @@ def extract_twitter_features(input_file, selected_features, output_format='xlsx'
     else:
         raise ValueError(f"Unsupported file format: {file_ext}")
     
-    # Dictionary of transformations for each feature
-    transformations = {
-        'content': lambda x: _extract_content(df),
-        'date': lambda x: _extract_date(df),
-        'hashtags': lambda x: _extract_hashtags(df),
-        'mentions': lambda x: _extract_mentions(df),
-        'favorite_count': lambda x: _extract_favorite_count(df),
-        'retweet_count': lambda x: _extract_retweet_count(df),
-        'has_media': lambda x: _extract_has_media(df),
-        'mention_count': lambda x: _extract_mention_count(df),
-        'emojis': lambda x: _extract_emojis(df),
-    }
-    
-    # Create output DataFrame with selected features
-    output_df = pd.DataFrame()
-    
-    for feature in selected_features:
-        if feature in transformations:
-            output_df[feature] = transformations[feature](df)
+    try:
+        # Dictionary of transformations for each feature
+        transformations = {
+            'content': lambda x: _extract_content(x),
+            'date': lambda x: _extract_date(x),
+            'hashtags': lambda x: _extract_hashtags(x),
+            'mentions': lambda x: _extract_mentions(x),
+            'favorite_count': lambda x: _extract_favorite_count(x),
+            'retweet_count': lambda x: _extract_retweet_count(x),
+            'has_media': lambda x: _extract_has_media(x),
+            'mention_count': lambda x: _extract_mention_count(x),
+            'emojis': lambda x: _extract_emojis(x),
+        }
+        
+        # Create output DataFrame with selected features
+        output_df = pd.DataFrame()
+        
+        for feature in selected_features:
+            if feature in transformations:
+                output_df[feature] = transformations[feature](df)
+                # Force garbage collection after each feature extraction
+                gc.collect()
+        
+        # Optimize DataFrame memory usage
+        output_df = _optimize_dataframe(output_df)
+    finally:
+        # Release input DataFrame memory
+        del df
+        gc.collect()
     
     # Generate output file
     output_dir = tempfile.gettempdir()
@@ -63,6 +75,19 @@ def extract_twitter_features(input_file, selected_features, output_format='xlsx'
         output_df.to_csv(output_path, index=False)
     else:
         raise ValueError(f"Unsupported output format: {output_format}")
+    
+    return output_path
+    
+    if output_format == 'xlsx':
+        _export_to_excel_optimized(output_df, output_path)
+    elif output_format == 'csv':
+        output_df.to_csv(output_path, index=False, compression=None)
+    else:
+        raise ValueError(f"Unsupported output format: {output_format}")
+    
+    # Clear output dataframe
+    del output_df
+    gc.collect()
     
     return output_path
 
@@ -312,3 +337,24 @@ def _parse_js_file(file_path):
     # Convert to DataFrame
     df = pd.json_normalize(tweets)
     return df
+
+
+def _optimize_dataframe(df):
+    """Optimize DataFrame memory usage by converting types"""
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            # Keep as object for mixed content
+            pass
+        elif df[col].dtype == 'int64':
+            df[col] = df[col].astype('int32')
+        elif df[col].dtype == 'float64':
+            df[col] = df[col].astype('float32')
+    return df
+
+
+def _export_to_excel_optimized(df, output_path):
+    """Export DataFrame to Excel with memory optimization"""
+    try:
+        df.to_excel(output_path, index=False, engine='openpyxl')
+    finally:
+        gc.collect()
