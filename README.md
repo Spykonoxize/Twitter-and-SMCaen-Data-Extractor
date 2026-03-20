@@ -1,100 +1,100 @@
 # Data Extractor
 
-Une application web professionnelle pour extraire et exporter des données Twitter et SM Caen (football) en plusieurs formats.
+A professional web application to extract and export Twitter and SM Caen (football) data in multiple formats.
 
-**Interface entièrement en français** | **Déploiement Render prêt** | **Pas de dépendances externes**
+**French User Interface** | **Render Deployment Ready** | **No External Dependencies**
 
-## 🎯 Fonctionnalités
+## 🎯 Features
 
 ### 🐦 Twitter Features Extractor
-Parse les données Twitter depuis plusieurs formats (CSV, JSON, XLSX, JS) et extrait 9 features:
-- **Contenu**: Texte complet du tweet
-- **Date**: Format ISO (YYYY-MM-DD HH:MM:SS)
-- **Hashtags**: Extraction depuis entités ou texte
-- **Mentions**: Noms d'utilisateurs mentionnés
-- **Favoris**: Nombre de likes
-- **Retweets**: Nombre de retweets
-- **Média**: Détection de présence de média
-- **Nombre mentions**: Décompte des mentions
-- **Emojis**: Extraction des emojis
+Parse Twitter data from multiple formats (CSV, JSON, XLSX, JS) and extracts 9 features:
+- **Content**: Full tweet text
+- **Date**: ISO format (YYYY-MM-DD HH:MM:SS)
+- **Hashtags**: Extract from entities or text
+- **Mentions**: Mentioned usernames
+- **Favorites**: Like count
+- **Retweets**: Retweet count
+- **Media**: Media presence detection
+- **Mention Count**: Number of mentions
+- **Emojis**: Emoji extraction
 
 ### ⚽ SM Caen Extractor
-Scrape les données réelles du site officiel de SM Caen et exporte:
-- **Saison**: Année(s) de la saison
-- **Date & Horaire**: Informations temporelles
-- **Compétition**: Type de match
-- **Équipes**: Domicile, Extérieur, Adversaire
-- **Score**: Résultat du match
-- **Localisation**: Domicile ou Extérieur
-- **Résultat**: Victoire, Défaite, Match Nul
+Scrapes real data from SM Caen official website and exports:
+- **Season**: Season year(s)
+- **Date & Time**: Temporal information
+- **Competition**: Match type
+- **Teams**: Home, Away, Opponent
+- **Score**: Match result
+- **Location**: Home or Away
+- **Result**: Win, Loss, Draw
 
-### 📥 Export Multiformat
+### 📥 Multi-format Export
 - **XLSX** (Excel)
-- **CSV** (Valeurs séparées par des virgules)
+- **CSV** (Comma-separated values)
 
-## 🛠️ Stack Technique
+## 🛠️ Tech Stack
 
-| Composant | Technologie |
+| Component | Technology |
 |-----------|------------|
 | **Backend** | Flask 3.0.0 |
 | **Python** | 3.11.9 |
-| **Données** | pandas 2.1.3, openpyxl 3.1.5 |
-| **Scraping** | requests 2.32.3, BeautifulSoup4 4.12.3 |
+| **Data** | pandas 2.1.3, openpyxl 3.1.5 |
+| **Web Scraping** | requests 2.32.3, BeautifulSoup4 4.12.3 |
 | **Features** | emoji 2.8.0 |
-| **Serveur** | gunicorn 21.2.0 |
-| **Déploiement** | Render.com |
+| **Server** | gunicorn 21.2.0 |
+| **Deployment** | Render.com |
 
-## 📁 Structure du Projet
+## 📁 Project Structure
 
 ```
 data-extractor/
 ├── 🔧 Configuration
-│   ├── app.py                    # Point d'entrée Flask
+│   ├── app.py                    # Flask entry point
 │   ├── config.py                 # Configuration (dev/prod)
-│   ├── requirements.txt           # Dépendances Python
-│   ├── Procfile                   # Config Render
-│   ├── runtime.txt                # Version Python (3.11.9)
-│   ├── .gitignore                 # Fichiers ignorés
-│   └── README.md                  # Cette documentation
+│   ├── requirements.txt           # Python dependencies
+│   ├── Procfile                   # Render config
+│   ├── runtime.txt                # Python version (3.11.9)
+│   ├── .gitignore                 # Ignored files
+│   └── README.md                  # This documentation
 │
-├── 📦 Code Source (src/)
+├── 📦 Source Code (src/)
 │   ├── __init__.py
 │   ├── twitter/
 │   │   ├── __init__.py
-│   │   └── extractor.py           # Extraction features Twitter
+│   │   └── extractor.py           # Twitter feature extraction
 │   └── caen/
 │       ├── __init__.py
-│       ├── extractor.py           # Wrapper extraction SM Caen
-│       └── scraper.py             # Scraper site officiel
+│       ├── extractor.py           # SM Caen extraction wrapper
+│       └── scraper.py             # Official website scraper
 │
 ├── 🎨 Interface (templates/)
-│   └── index.html                 # UI responsive (français)
+│   └── index.html                 # UI responsive (French)
 │
-└── 📂 Assets Statiques (static/)
+└── 📂 Static Assets (static/)
     ├── css/
-    │   └── style.css              # Styles (couleurs SM Caen)
+    │   └── style.css              # Styles (SM Caen branding)
     ├── js/
-    │   └── main.js                # Fonctionnalités client
+    │   └── main.js                # Client-side features
     └── images/
-        ├── Logo_X.svg             # Logo Twitter
-        └── Logo_SM_Caen.svg       # Logo SM Caen
+        ├── Logo_X.svg             # Twitter logo
+        └── Logo_SM_Caen.svg       # SM Caen logo
 ```
 
-## 🚀 Démarrage Local
+## 🚀 Getting Started Locally
 
-### Prérequis
+### Prerequisites
 - Python 3.11+
 - pip
 
 ### Installation
 
-1. **Cloner le repository**
+1. **Clone the repository**
 ```bash
 git clone https://github.com/yourusername/data-extractor.git
 cd data-extractor
 ```
 
-2. **Créer un environnement virtuel**
+2. **Create a virtual environment**
 ```bash
 python -m venv venv
 
@@ -105,24 +105,24 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-3. **Installer les dépendances**
+3. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Lancer l'application**
+4. **Run the application**
 ```bash
 python app.py
 ```
 
-5. **Accéder à l'application**
+5. **Access the application**
 ```
 http://localhost:5000
 ```
 
-## 🌐 Déploiement sur Render
+## 🌐 Deployment on Render
 
-### Étape 1: Préparer GitHub
+### Step 1: Prepare GitHub
 ```bash
 git init
 git add .
@@ -130,58 +130,58 @@ git commit -m "Initial commit"
 git push origin main
 ```
 
-### Étape 2: Créer un Web Service sur Render
-1. Accéder à [render.com](https://render.com)
-2. Cliquer sur "New +" → "Web Service"
-3. Connecter le repository GitHub
-4. Configurer:
-   - **Name**: `data-extractor` (ou autre)
+### Step 2: Create a Web Service on Render
+1. Go to [render.com](https://render.com)
+2. Click "New +" → "Web Service"
+3. Connect your GitHub repository
+4. Configure:
+   - **Name**: `data-extractor` (or your choice)
    - **Language**: Python 3.11
    - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `gunicorn app:app`
-   - **Environment**: Ajouter variables si nécessaire
+   - **Environment**: Add variables if needed
 
-### Étape 3: Déployer
-Cliquer sur "Deploy" et laisser Render faire son travail!
+### Step 3: Deploy
+Click "Deploy" and let Render handle the rest!
 
-## 💡 Utilisation
+## 💡 Usage
 
-### Extraction Twitter
+### Twitter Extraction
 
-1. **Télécharger** un fichier (CSV, JSON, XLSX, ou JS)
-   - Formats Twitter:
-     - **CSV**: Colonnes: `full_text`, `created_at`, `favorite_count`, `retweet_count`
-     - **JSON**: Objets tweets avec structure standard
-     - **XLSX**: Feuille avec tweets
-     - **JS**: Format export natif Twitter (`window.YTD.tweets.part1 = [...]`)
+1. **Upload** a file (CSV, JSON, XLSX, or JS)
+   - Twitter Formats:
+     - **CSV**: Columns: `full_text`, `created_at`, `favorite_count`, `retweet_count`
+     - **JSON**: Tweet objects with standard structure
+     - **XLSX**: Sheet with tweets
+     - **JS**: Native Twitter export format (`window.YTD.tweets.part1 = [...]`)
 
-2. **Sélectionner les features** à extraire (min 1)
-   - Utiliser "Tout sélectionner" pour rapidement cocher/décocher
+2. **Select features** to extract (minimum 1)
+   - Use "Select All" to quickly check/uncheck all features
 
-3. **Choisir le format** de sortie (XLSX ou CSV)
+3. **Choose output format** (XLSX or CSV)
 
-4. **Télécharger** les données traitées
+4. **Download** the processed data
 
-### Extraction SM Caen
+### SM Caen Extraction
 
-1. **Entrer la plage d'années**
-   - Année début: 2012-2026
-   - Année fin: 2013-2027 (doit être > année début)
-   - Exemples: 2021→2022 = saison 2021-2022 uniquement
+1. **Enter year range**
+   - Start Year: 2012-2026
+   - End Year: 2013-2027 (must be > start year)
+   - Example: 2021→2022 = 2021-2022 season only
 
-2. **Choisir le format** de sortie (XLSX ou CSV)
+2. **Choose output format** (XLSX or CSV)
 
-3. **Télécharger** les données réelles depuis le site officiel
+3. **Download** real data from the official website
 
-## 🔌 Endpoints API
+## 🔌 API Endpoints
 
-| Méthode | Route | Description |
-|---------|-------|-------------|
-| GET | `/` | Page principale |
-| POST | `/extract-twitter` | Extraction features Twitter |
-| POST | `/extract-caen` | Extraction données SM Caen |
+| Method | Route | Description |
+|--------|-------|-------------|
+| GET | `/` | Main page |
+| POST | `/extract-twitter` | Twitter feature extraction |
+| POST | `/extract-caen` | SM Caen data extraction |
 
-### Exemple requête (Twitter)
+### Example Request (Twitter)
 ```bash
 curl -X POST http://localhost:5000/extract-twitter \
   -F "file=@tweets.csv" \
@@ -192,103 +192,103 @@ curl -X POST http://localhost:5000/extract-twitter \
 
 ## ⚙️ Configuration
 
-### Fichiers de configuration
-- **config.py**: Paramètres de l'application
+### Configuration Files
+- **config.py**: Application settings
   - Max upload: 500MB
-  - Formats autorisés: `csv, xlsx, xls, json, js`
+  - Allowed formats: `csv, xlsx, xls, json, js`
 
-- **runtime.txt**: Spécifie Python 3.11.9 pour Render
+- **runtime.txt**: Specifies Python 3.11.9 for Render
 
-### Variables d'environnement
+### Environment Variables
 ```bash
-DEBUG=False        # Mode développement (False en prod)
+DEBUG=False        # Development mode (False in production)
 ```
 
-## ✨ Caractéristiques Techniques
+## ✨ Technical Features
 
-### Traitement de données
-✅ Extraction intelligente de colonnes (détection automatique)
-✅ Parsing Twitter format (Sat Oct 01 18:01:20 +0000 2016 → YYYY-MM-DD HH:MM:SS)
-✅ Extraction entités imbriquées (hashtags, mentions depuis JSON)
-✅ Fallback regex si entités manquantes
-✅ Gestion des valeurs vides/nulles
+### Data Processing
+✅ Intelligent column extraction (automatic detection)
+✅ Twitter parsing (Sat Oct 01 18:01:20 +0000 2016 → YYYY-MM-DD HH:MM:SS)
+✅ Nested entity extraction (hashtags, mentions from JSON)
+✅ Regex fallback if entities missing
+✅ Null/empty value handling
 
-### Web scraping SM Caen
-✅ Scrape le site officiel (smcaen.fr)
-✅ Détection flexible du nom Caen (caen, malherbe, smc)
-✅ Rate limiting (0.8s délai entre requêtes)
-✅ Calcul automatique scores/résultats
-✅ Gestion des matchs non joués
+### SM Caen Web Scraping
+✅ Scrapes official website (smcaen.fr)
+✅ Flexible Caen name detection (caen, malherbe, smc)
+✅ Rate limiting (0.8s delay between requests)
+✅ Automatic score/result calculation
+✅ Non-played match handling
 
-### Interface utilisateur
+### User Interface
 ✅ Responsive (mobile, tablet, desktop)
-✅ Couleurs SM Caen (bleu marine #003d5c, rouge #c41e3a, doré #D4AF37)
-✅ Toggle "Tout sélectionner" pour features
-✅ Chargement avec spinner animé
-✅ Messages d'erreur clairs
-✅ Entièrement en français
+✅ SM Caen branding colors (navy #003d5c, red #c41e3a, gold #D4AF37)
+✅ "Select All" toggle for features
+✅ Animated loading spinner
+✅ Clear error messages
+✅ Fully in French language
 
-## 🧪 Tests
+## 🧪 Testing
 
-### Test local
+### Local Test
 ```bash
 python app.py
 ```
 
-### Test production (Gunicorn)
+### Production Test (Gunicorn)
 ```bash
 gunicorn app:app
 ```
 
-Puis faire une requête POST aux endpoints.
+Then make POST requests to the endpoints.
 
-## 📊 Limites et Restrictions
+## 📊 Limitations and Restrictions
 
-- **Taille fichier**: Max 500MB
-- **Format Twitter**: Doit contenir colonnes reconnaissables (full_text, created_at, etc.)
-- **Format JS**: Doit respecter `window.YTD.tweets.partX = [...]`
-- **SM Caen**: Scraping du site officiel uniquement
-- **Rate limit**: 0.8s minimum entre requêtes SM Caen
+- **File Size**: Max 500MB
+- **Twitter Format**: Must contain recognizable columns (full_text, created_at, etc.)
+- **JS Format**: Must follow `window.YTD.tweets.partX = [...]`
+- **SM Caen**: Official website scraping only
+- **Rate Limit**: 0.8s minimum between SM Caen requests
 
-## 🐛 Gestion d'erreurs
+## 🐛 Error Handling
 
-L'application détecte et gère:
-- ✅ Fichiers corrompus
-- ✅ Formats non supportés
-- ✅ Colonnes manquantes
-- ✅ Données invalides (dates mal formatées, etc.)
-- ✅ Problèmes de scraping (site down, timeout)
-- ✅ Erreurs d'export (permissions fichier, espace disque)
+The application detects and handles:
+- ✅ Corrupted files
+- ✅ Unsupported formats
+- ✅ Missing columns
+- ✅ Invalid data (malformed dates, etc.)
+- ✅ Scraping issues (site unavailable, timeout)
+- ✅ Export errors (file permissions, disk space)
 
-Messages d'erreur explicites en français dans la UI.
+Clear error messages in French in the UI.
 
 ## 📈 Performance
 
-- Traitement pandas optimisé (in-memory)
-- Export XLSX sans fichier intermédiaire (BytesIO)
-- Scraping avec délai configuré pour respecter les serveurs
-- Streaming de réponse pour gros fichiers
+- Optimized pandas processing (in-memory)
+- XLSX export without intermediate file (BytesIO)
+- Scraping with configurable delay to respect servers
+- Response streaming for large files
 
-## 🤝 Contribution
+## 🤝 Contributing
 
-Les contributions sont bienvenues! Pour contribuer:
+Contributions are welcome! To contribute:
 
-1. Fork le repository
-2. Créer une branche (`git checkout -b feature/amazing-feature`)
-3. Commit les changements (`git commit -m 'Add amazing feature'`)
-4. Push vers la branche (`git push origin feature/amazing-feature`)
-5. Ouvrir une Pull Request
+1. Fork the repository
+2. Create a branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📝 License
 
-MIT License - voir LICENSE pour détails
+MIT License - see LICENSE for details
 
-## 👤 Auteur
+## 👤 Author
 
-Créé pour extraction et analyse de données Twitter et SM Caen.
+Created for Twitter and SM Caen data extraction and analysis.
 
 ---
 
-**Questions?** Ouvrir une issue sur GitHub.
+**Questions?** Open an issue on GitHub.
 
-**Prêt à déployer?** Suivez le guide [Déploiement sur Render](#-déploiement-sur-render) ci-dessus!
+**Ready to deploy?** Follow the [Deployment on Render](#-deployment-on-render) guide above!
