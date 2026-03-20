@@ -7,7 +7,7 @@ A professional web application to extract and export Twitter and SM Caen (footba
 ## 🎯 Features
 
 ### 🐦 Twitter Features Extractor
-Parse Twitter data from multiple formats (CSV, JSON, XLSX, JS) and extracts 9 features:
+Parse Twitter native export format (.js) and extracts 9 features:
 - **Content**: Full tweet text
 - **Date**: ISO format (YYYY-MM-DD HH:MM:SS)
 - **Hashtags**: Extract from entities or text
@@ -38,7 +38,7 @@ Scrapes real data from SM Caen official website and exports:
 |-----------|------------|
 | **Backend** | Flask 3.0.0 |
 | **Python** | 3.11.9 |
-| **Data** | pandas 2.1.3, openpyxl 3.1.5 |
+| **Data** | pandas ≥2.2.0, openpyxl ≥3.1.5, ijson ≥3.3.0 |
 | **Web Scraping** | requests 2.32.3, BeautifulSoup4 4.12.3 |
 | **Features** | emoji 2.8.0 |
 | **Server** | gunicorn 21.2.0 |
@@ -140,6 +140,7 @@ git push origin main
    - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `gunicorn app:app`
    - **Environment**: Add variables if needed
+   - **Timeout** (Important): Set timeout to 180 seconds (3 minutes) to handle large file processing
 
 ### Step 3: Deploy
 Click "Deploy" and let Render handle the rest!
@@ -148,12 +149,10 @@ Click "Deploy" and let Render handle the rest!
 
 ### Twitter Extraction
 
-1. **Upload** a file (CSV, JSON, XLSX, or JS)
-   - Twitter Formats:
-     - **CSV**: Columns: `full_text`, `created_at`, `favorite_count`, `retweet_count`
-     - **JSON**: Tweet objects with standard structure
-     - **XLSX**: Sheet with tweets
-     - **JS**: Native Twitter export format (`window.YTD.tweets.part1 = [...]`)
+1. **Upload** a Twitter export file (.js)
+   - **Format**: Native Twitter export format (`window.YTD.tweets.part1 = [...]`)
+   - **How to obtain**: Download from Twitter's data export feature
+   - ⏱️ **Note**: Processing large files (100K+ tweets) can take several minutes. Please be patient and do not close the page during extraction.
 
 2. **Select features** to extract (minimum 1)
    - Use "Select All" to quickly check/uncheck all features
@@ -237,7 +236,7 @@ python app.py
 
 ### Production Test (Gunicorn)
 ```bash
-gunicorn app:app
+gunicorn app:app --workers 1 --threads 2 --timeout 180 --graceful-timeout 30
 ```
 
 Then make POST requests to the endpoints.
@@ -245,10 +244,10 @@ Then make POST requests to the endpoints.
 ## 📊 Limitations and Restrictions
 
 - **File Size**: Max 150MB
-- **Twitter Format**: Must contain recognizable columns (full_text, created_at, etc.)
-- **JS Format**: Must follow `window.YTD.tweets.partX = [...]`
+- **Twitter Format**: Must be native Twitter .js export (`window.YTD.tweets.partX = [...]`)
 - **SM Caen**: Official website scraping only
 - **Rate Limit**: 0.8s minimum between SM Caen requests
+- **Processing Time**: Large Twitter files (100K+ tweets) may take 2-5 minutes to process
 
 ## 🐛 Error Handling
 

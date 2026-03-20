@@ -1,5 +1,4 @@
 import ast
-import csv
 import json
 import os
 import re
@@ -9,7 +8,6 @@ from functools import lru_cache
 
 import emoji
 import ijson
-import pandas as pd
 from openpyxl import Workbook
 
 
@@ -77,50 +75,10 @@ class _RowWriter:
 
 
 def _iter_records(input_file, file_ext, chunk_size):
-    if file_ext == "csv":
-        yield from _iter_csv_records(input_file, chunk_size)
-    elif file_ext == "json":
-        yield from _iter_json_records(input_file)
-    elif file_ext in {"xlsx", "xls"}:
-        yield from _iter_excel_records(input_file)
-    elif file_ext == "js":
-        yield from _iter_js_records(input_file)
-    else:
-        raise ValueError(f"Unsupported file format: {file_ext}")
-
-
-def _iter_csv_records(file_path, chunk_size):
-    for chunk in pd.read_csv(file_path, chunksize=chunk_size, dtype=str, keep_default_na=False):
-        for record in chunk.to_dict(orient="records"):
-            yield record
-
-
-def _iter_excel_records(file_path):
-    # Excel loading is less stream-friendly with pandas, but still handled row-wise afterwards.
-    df = pd.read_excel(file_path, dtype=str)
-    df = df.fillna("")
-    for record in df.to_dict(orient="records"):
-        yield record
-
-
-def _iter_json_records(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
-        first_char = _first_non_whitespace_char(f)
-        f.seek(0)
-
-        if first_char == "[":
-            for item in ijson.items(f, "item"):
-                yield _normalize_record(item)
-        else:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    item = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                yield _normalize_record(item)
+    """Twitter JS files only."""
+    if file_ext != "js":
+        raise ValueError(f"Only .js format is supported, got: {file_ext}")
+    yield from _iter_js_records(input_file)
 
 
 def _iter_js_records(file_path):
@@ -173,15 +131,6 @@ def _trim_trailing_semicolon(file_path):
                 f.seek(pos)
                 f.truncate()
             break
-
-
-def _first_non_whitespace_char(file_obj):
-    while True:
-        char = file_obj.read(1)
-        if not char:
-            return ""
-        if not char.isspace():
-            return char
 
 
 def _normalize_record(item):
