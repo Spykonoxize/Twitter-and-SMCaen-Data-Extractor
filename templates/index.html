@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter & SM Caen Data Extractor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Data Extractor</h1>
+            <p>Extrayez les données Twitter et SM Caen au format de votre choix</p>
+        </div>
+        
+        <div class="content">
+            <!-- Section Twitter -->
+            <div class="card">
+                <h2>
+                    <img src="{{ url_for('static', filename='images/Logo_X.svg') }}" alt="Twitter" class="card-icon">
+                    Twitter Features Extractor
+                </h2>
+                
+                <div class="alert" id="twitter-alert"></div>
+                
+                <form id="twitter-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="twitter-file">Télécharger un fichier (CSV/JSON/XLSX/JS)</label>
+                        <input 
+                            type="file" 
+                            id="twitter-file" 
+                            name="file"
+                            accept=".csv,.json,.xlsx,.xls,.js"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="feature-header">
+                            <label>Sélectionner les features à extraire</label>
+                            <button type="button" class="toggle-all-btn" id="twitter-toggle-all">Tout sélectionner</button>
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    id="content" 
+                                    name="features" 
+                                    value="content"
+                                    class="twitter-checkbox"
+                                >
+                                <label for="content">Contenu</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    id="date" 
+                                    name="features" 
+                                    value="date"
+                                    class="twitter-checkbox"
+                                >
+                                <label for="date">Date</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    id="hashtags" 
+                                    name="features" 
+                                    value="hashtags"
+                                    class="twitter-checkbox"
+                                >
+                                <label for="hashtags">Hashtags</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    id="mentions" 
+                                    name="features" 
+                                    value="mentions"
+                                    class="twitter-checkbox"
+                                >
+                                <label for="mentions">Mentions</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    id="favorite_count" 
+                                    name="features" 
+                                    value="favorite_count"
+                                    class="twitter-checkbox"
+                                >
+                                <label for="favorite_count">Favoris</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    id="retweet_count" 
+                                    name="features" 
+                                    value="retweet_count"
+                                    class="twitter-checkbox"
+                                >
+                                <label for="retweet_count">Retweets</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    id="has_media" 
+                                    name="features" 
+                                    value="has_media"
+                                    class="twitter-checkbox"
+                                >
+                                <label for="has_media">Média présent</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    id="mention_count" 
+                                    name="features" 
+                                    value="mention_count"
+                                    class="twitter-checkbox"
+                                >
+                                <label for="mention_count">Nbre mentions</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    id="emojis" 
+                                    name="features" 
+                                    value="emojis"
+                                    class="twitter-checkbox"
+                                >
+                                <label for="emojis">Emojis</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Format de sortie</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input 
+                                    type="radio" 
+                                    id="twitter-xlsx" 
+                                    name="output_format" 
+                                    value="xlsx"
+                                    checked
+                                >
+                                <label for="twitter-xlsx">XLSX</label>
+                            </div>
+                            <div class="radio-item">
+                                <input 
+                                    type="radio" 
+                                    id="twitter-csv" 
+                                    name="output_format" 
+                                    value="csv"
+                                >
+                                <label for="twitter-csv">CSV</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit">📥 Télécharger les données</button>
+                    
+                    <div class="loading" id="twitter-loading">
+                        <div class="spinner"></div>
+                        <p>Traitement en cours...</p>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Section SM Caen -->
+            <div class="card">
+                <h2>
+                    <img src="{{ url_for('static', filename='images/Logo_SM_Caen.svg') }}" alt="SM Caen" class="card-icon">
+                    SM Caen Extractor
+                </h2>
+                
+                <div class="alert" id="caen-alert"></div>
+                
+                <form id="caen-form">
+                    <div class="form-group year-inputs">
+                        <div>
+                            <label for="annee_debut">Année de début de saison</label>
+                            <input 
+                                type="number" 
+                                id="annee_debut" 
+                                name="annee_debut"
+                                min="2012"
+                                value="2020"
+                                required
+                            >
+                        </div>
+                        <div>
+                            <label for="annee_fin">Année de fin de saison</label>
+                            <input 
+                                type="number" 
+                                id="annee_fin" 
+                                name="annee_fin"
+                                min="2013"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Format de sortie</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input 
+                                    type="radio" 
+                                    id="caen-xlsx" 
+                                    name="output_format" 
+                                    value="xlsx"
+                                    checked
+                                >
+                                <label for="caen-xlsx">XLSX</label>
+                            </div>
+                            <div class="radio-item">
+                                <input 
+                                    type="radio" 
+                                    id="caen-csv" 
+                                    name="output_format" 
+                                    value="csv"
+                                >
+                                <label for="caen-csv">CSV</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit">📥 Télécharger les données</button>
+                    
+                    <div class="loading" id="caen-loading">
+                        <div class="spinner"></div>
+                        <p>Traitement en cours...</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
