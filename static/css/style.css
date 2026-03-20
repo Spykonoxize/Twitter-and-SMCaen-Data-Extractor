@@ -273,6 +273,25 @@ button[type="submit"]:active {
     border-left-color: #003d5c;
 }
 
+.info-note {
+    background: #e8f4f8;
+    border: 1px solid #b3d9e8;
+    border-radius: 5px;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    color: #0a566a;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.info-note p {
+    margin: 0;
+}
+
+.info-note strong {
+    color: #003d5c;
+}
+
 .loading {
     display: none;
     text-align: center;

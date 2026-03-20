@@ -25,7 +25,7 @@
                 
                 <form id="twitter-form" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="twitter-file">Télécharger un fichier (CSV/JSON/XLSX/JS)</label>
+                        <label for="twitter-file">Télécharger un fichier (.js, 150MB max)</label>
                         <div class="drag-drop-zone" id="twitter-drop-zone">
                             <div class="drag-drop-content">
                                 <p>📁 Glissez-déposez votre fichier ici</p>
@@ -35,7 +35,7 @@
                                 type="file" 
                                 id="twitter-file" 
                                 name="file"
-                                accept=".csv,.json,.xlsx,.xls,.js"
+                                accept=".js"
                                 required
                             >
                         </div>
@@ -125,7 +125,7 @@
                                     value="mention_count"
                                     class="twitter-checkbox"
                                 >
-                                <label for="mention_count">Nbre mentions</label>
+                                <label for="mention_count">Nb mentions</label>
                             </div>
                             <div class="checkbox-item">
                                 <input 
@@ -163,6 +163,10 @@
                                 <label for="twitter-csv">CSV</label>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="info-note">
+                        <p>⏱️ <strong>Note:</strong> Le traitement de fichiers volumineux peut prendre plusieurs minutes. Veuillez ne pas fermer la page.</p>
                     </div>
                     
                     <button type="submit">📥 Télécharger les données</button>
