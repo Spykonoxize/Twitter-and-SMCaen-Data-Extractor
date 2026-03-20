@@ -129,8 +129,8 @@ document.getElementById('twitter-form').addEventListener('submit', async (e) => 
             downloadFile(blob, `tweets_extracted.${format}`);
             showAlert(alertDiv, 'Fichier téléchargé avec succès!', 'success');
         } else {
-            const error = await response.json();
-            showAlert(alertDiv, error.error || 'Une erreur est survenue', 'error');
+            const errorMessage = await getErrorMessage(response);
+            showAlert(alertDiv, errorMessage, 'error');
         }
     } catch (error) {
         showAlert(alertDiv, 'Erreur de connexion: ' + error.message, 'error');
@@ -178,8 +178,8 @@ document.getElementById('caen-form').addEventListener('submit', async (e) => {
             downloadFile(blob, `caen_data_${debut}_${fin}.${format}`);
             showAlert(alertDiv, 'Fichier téléchargé avec succès!', 'success');
         } else {
-            const error = await response.json();
-            showAlert(alertDiv, error.error || 'Une erreur est survenue', 'error');
+            const errorMessage = await getErrorMessage(response);
+            showAlert(alertDiv, errorMessage, 'error');
         }
     } catch (error) {
         showAlert(alertDiv, 'Erreur de connexion: ' + error.message, 'error');
@@ -203,4 +203,29 @@ function downloadFile(blob, filename) {
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
+}
+
+async function getErrorMessage(response) {
+    const contentType = response.headers.get('content-type') || '';
+
+    if (contentType.includes('application/json')) {
+        try {
+            const payload = await response.json();
+            return payload.error || payload.message || 'Une erreur est survenue';
+        } catch (e) {
+            // Fallback below if JSON is malformed.
+        }
+    }
+
+    const text = await response.text();
+
+    if (response.status === 413) {
+        return 'Fichier trop volumineux. Limite actuelle: 150 MB.';
+    }
+
+    if (text && text.trim().startsWith('<')) {
+        return `Erreur serveur (${response.status}). Veuillez réessayer.`;
+    }
+
+    return text || `Erreur serveur (${response.status})`;
 }

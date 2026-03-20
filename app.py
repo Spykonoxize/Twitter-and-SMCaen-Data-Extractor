@@ -13,6 +13,16 @@ app.config.from_object(Config)
 # Configure maximum file size (150MB for safety on 512MB Render)
 app.config['MAX_CONTENT_LENGTH'] = 150 * 1024 * 1024
 
+
+@app.errorhandler(413)
+def request_entity_too_large(_error):
+    return jsonify({'error': 'Fichier trop volumineux. Limite actuelle: 150 MB.'}), 413
+
+
+@app.errorhandler(500)
+def internal_server_error(_error):
+    return jsonify({'error': 'Erreur interne du serveur. Veuillez réessayer.'}), 500
+
 def allowed_file(filename):
     """Check if file has an allowed extension"""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
