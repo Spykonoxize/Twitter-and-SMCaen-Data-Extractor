@@ -1,6 +1,6 @@
 import os
 import tempfile
-from flask import Flask, render_template, request, send_file, jsonify
+from flask import Flask, render_template, request, send_file, jsonify, after_this_request
 from werkzeug.utils import secure_filename
 from config import Config
 from src.twitter.extractor import extract_twitter_features
@@ -29,6 +29,19 @@ def cleanup_temp_files():
         except Exception:
             pass
     gc.collect()
+
+
+def schedule_file_cleanup(file_path):
+    """Delete generated file only after the response is fully sent."""
+
+    @after_this_request
+    def _cleanup(response):
+        if file_path and os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+            except Exception:
+                pass
+        return response
 
 @app.route('/')
 def index():
@@ -72,6 +85,9 @@ def extract_twitter():
             output_format
         )
         
+        # Delete output only after download is completed.
+        schedule_file_cleanup(output_path)
+
         # Envoyer le fichier à l'utilisateur
         return send_file(
             output_path,
@@ -90,15 +106,8 @@ def extract_twitter():
             except Exception:
                 pass
         
-        if output_path and os.path.exists(output_path):
-            try:
-                os.remove(output_path)
-            except Exception:
-                pass
-        
         # Force garbage collection
         gc.collect()
-        cleanup_temp_files()
 
 @app.route('/extract-caen', methods=['POST'])
 def extract_caen():
@@ -117,6 +126,9 @@ def extract_caen():
         # Extraire les données Caen
         output_path = extract_caen_data(annee_debut, annee_fin, output_format)
         
+        # Delete output only after download is completed.
+        schedule_file_cleanup(output_path)
+
         # Envoyer le fichier à l'utilisateur
         return send_file(
             output_path,
@@ -130,14 +142,7 @@ def extract_caen():
         return jsonify({'error': f'Erreur lors du traitement: {str(e)}'}), 500
     
     finally:
-        if output_path and os.path.exists(output_path):
-            try:
-                os.remove(output_path)
-            except Exception:
-                pass
-        
         gc.collect()
-        cleanup_temp_files()
 
 if __name__ == '__main__':
     app.run(debug=False)

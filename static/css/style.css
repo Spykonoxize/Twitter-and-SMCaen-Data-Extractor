@@ -293,6 +293,8 @@ button[type="submit"]:active {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
 .drag-drop-zone {
     position: relative;
     border: 2px dashed #c41e3a;
@@ -331,7 +333,6 @@ button[type="submit"]:active {
 
 .drag-drop-zone input[type="file"] {
     display: none;
-}
 }
 
 @media (max-width: 768px) {
