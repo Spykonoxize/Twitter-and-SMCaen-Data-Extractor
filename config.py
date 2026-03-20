@@ -11,7 +11,7 @@ class Config:
     # Upload config
     UPLOAD_FOLDER = tempfile.gettempdir()
     ALLOWED_EXTENSIONS = {'csv', 'xlsx', 'xls', 'json', 'js'}
-    MAX_CONTENT_LENGTH = 500 * 1024 * 1024  # 500MB max file size
+    MAX_CONTENT_LENGTH = 150 * 1024 * 1024  # 150MB max file size
     
     # App settings
     JSON_SORT_KEYS = False

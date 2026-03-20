@@ -194,7 +194,7 @@ curl -X POST http://localhost:5000/extract-twitter \
 
 ### Configuration Files
 - **config.py**: Application settings
-  - Max upload: 500MB
+  - Max upload: 150MB
   - Allowed formats: `csv, xlsx, xls, json, js`
 
 - **runtime.txt**: Specifies Python 3.11.9 for Render
@@ -244,7 +244,7 @@ Then make POST requests to the endpoints.
 
 ## 📊 Limitations and Restrictions
 
-- **File Size**: Max 500MB
+- **File Size**: Max 150MB
 - **Twitter Format**: Must contain recognizable columns (full_text, created_at, etc.)
 - **JS Format**: Must follow `window.YTD.tweets.partX = [...]`
 - **SM Caen**: Official website scraping only
